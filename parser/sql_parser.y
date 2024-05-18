@@ -2,6 +2,15 @@
 #include <iostream>
 #include <string>
 #include "Scanner.hpp"
+#include "../extendiblehashing/Bucket_EH.hh"
+#include "../extendiblehashing/ExtendibleHashing.hh"
+
+
+using namespace std;
+using namespace sql_parser;
+
+directory_EH<string> hashTable(5, 5); // inicilizaremos con un deph global de 3 y size de bucket 4
+void loadCSVToHashTable(const std::string& filename, const std::string& key);
 %}
 
 %require "3.7.4"
@@ -39,14 +48,11 @@ command
     ;
 
 create_table_command
-    : CREATE TABLE IDENTIFIER FROM FILE STRING_LITERAL USING INDEX index_type LPAREN IDENTIFIER RPAREN EOL
+    : CREATE TABLE IDENTIFIER FROM FILE STRING_LITERAL USING INDEX LPAREN IDENTIFIER RPAREN EOL
     {
-        std::cout << "Create table command: " << $3 << " from file " << $6 << " using index " << $9 << "(" << $11 << ")" << std::endl;
+        std::cout << "Create table command: " << $3 << " from file " << $6 << " using index on " << $10 << std::endl;
+        loadCSVToHashTable($6, $10);
     }
-    ;
-
-index_type
-    : IDENTIFIER
     ;
 
 select_command
@@ -99,4 +105,48 @@ delete_command
 
 void sql_parser::Parser::error(const std::string& msg) {
     std::cerr << "Error: " << msg << '\n';
+}
+
+void loadCSVToHashTable(const std::string& filename, const std::string& key) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    std::vector<std::string> columns;
+    bool firstLine = true;
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string token;
+        Registro record;
+        bool isKeyColumn = false;
+
+        int colIdx = 0;
+        while (std::getline(ss, token, ',')) {
+            if (firstLine) {
+                columns.push_back(token);
+                if (token == key) {
+                    isKeyColumn = true;
+                }
+            } else {
+                if (columns[colIdx] == key) {
+                    record.setKey(key, token);
+                } else {
+                    record.setField(columns[colIdx], token);
+                }
+                colIdx++;
+            }
+        }
+
+        if (!firstLine) {
+            hashTable.add(record.getKey(), record);
+        }
+
+        firstLine = false;
+    }
+
+    file.close();
 }
