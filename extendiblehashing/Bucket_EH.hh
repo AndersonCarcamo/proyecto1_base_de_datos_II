@@ -8,7 +8,7 @@
 #include <string>
 #include <bitset>
 // dependencias
-
+#include <fstream>
 #include "registro.h"
 
 using namespace std;
@@ -18,9 +18,9 @@ class Bucket_EH {
 private:
     int localDepth; // depth del bucket
     int size; // cantidad de registros actuales en el bucket
-    int size_max; // capacidad del bucket
     vector<Registro> records;
 public:
+    int size_max; // capacidad del bucket
     Bucket_EH(int localDepth, int max);
     ~Bucket_EH();
 
@@ -35,10 +35,13 @@ public:
     void increaseDepth(); // aumenta la profundidad local
     void decreaseDepth(); // disminuye la profuncidad local
     void clear();
+
+    void save(std::ofstream& outFile) const;
+    void load(std::ifstream& inFile);
 };
 
 template <typename T>
-Bucket_EH<T>::Bucket_EH(int localDepth, int max) {
+Bucket_EH<T>::Bucket_EH(int max, int localDepth) {
     this->size_max = max;
     this->localDepth = localDepth;
     this->size = 0;
@@ -49,12 +52,12 @@ Bucket_EH<T>::~Bucket_EH() {}
 
 template <typename T>
 bool Bucket_EH<T>::isFull() const {
-    return records.size() >= size;
+    return records.size() >= size_max;
 }
 
 template <typename T>
 bool Bucket_EH<T>::isEmpty() {
-    return size == 0;
+    return records.empty();
 }
 
 template <typename T>
@@ -122,6 +125,34 @@ void Bucket_EH<T>::redistribute(std::unordered_map<std::string, Bucket_EH<T>*>& 
         std::string newBucketIndex = std::bitset<sizeof(std::size_t) * 8>(std::hash<T>{}(record.key)).to_string();
         newBucketIndex = newBucketIndex.substr(newBucketIndex.size() - localDepth);
         directory[newBucketIndex]->add(record);
+    }
+}
+
+template <typename T>
+void Bucket_EH<T>::save(std::ofstream& outFile) const {
+    outFile.write(reinterpret_cast<const char*>(&localDepth), sizeof(localDepth));
+    int recordCount = records.size();
+    outFile.write(reinterpret_cast<const char*>(&recordCount), sizeof(recordCount));
+    for (const auto& record : records) {
+        outFile.write(reinterpret_cast<const char*>(&record.key), sizeof(record.key));
+        size_t dataSize = record.data.size();
+        outFile.write(reinterpret_cast<const char*>(&dataSize), sizeof(dataSize));
+        outFile.write(record.data.c_str(), dataSize);
+    }
+}
+
+template <typename T>
+void Bucket_EH<T>::load(std::ifstream& inFile) {
+    inFile.read(reinterpret_cast<char*>(&localDepth), sizeof(localDepth));
+    int recordCount;
+    inFile.read(reinterpret_cast<char*>(&recordCount), sizeof(recordCount));
+    records.resize(recordCount);
+    for (auto& record : records) {
+        inFile.read(reinterpret_cast<char*>(&record.key), sizeof(record.key));
+        size_t dataSize;
+        inFile.read(reinterpret_cast<char*>(&dataSize), sizeof(dataSize));
+        record.data.resize(dataSize);
+        inFile.read(&record.data[0], size);
     }
 }
 

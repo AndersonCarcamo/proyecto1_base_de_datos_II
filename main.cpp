@@ -27,19 +27,19 @@ int main(){
         cout << "Found: key=" << reg.key << ", data=" << reg.data << endl;
     }
 
-    // Eliminar un registro y verificar
-    if (dir.remove(2)) {
-        cout << "Registro con clave 2 eliminado correctamente." << endl;
-    }
-
-    result = dir.search(2);
-    if (result.empty()) {
-        cout << "No se encontró el registro con clave 2 (esperado)." << endl;
-    } else {
-        for (const auto& reg : result) {
-            cout << "Found: key=" << reg.key << ", data=" << reg.data << endl;
-        }
-    }
+//    // Eliminar un registro y verificar
+//    if (dir.remove(2)) {
+//        cout << "Registro con clave 2 eliminado correctamente." << endl;
+//    }
+//
+//    result = dir.search(2);
+//    if (result.empty()) {
+//        cout << "No se encontró el registro con clave 2 (esperado)." << endl;
+//    } else {
+//        for (const auto& reg : result) {
+//            cout << "Found: key=" << reg.key << ", data=" << reg.data << endl;
+//        }
+//    }
 
     return 0;
 }

@@ -13,6 +13,7 @@
 #include "Bucket_EH.hh"
 #include <cmath>
 
+
 // manejo del indice de direcciones a los buckets
 template <typename T>
 class directory_EH {
@@ -23,9 +24,9 @@ public:
     directory_EH(int depth, int size_bucket);
     ~directory_EH();
     void doubleDir(); // para duplicar el directorio si es que se lleno el directorio
-    void splitBucket(int bucketIndex); // para dividir el bucket
+    void splitBucket(string bucketIndex); // para dividir el bucket
 
-    vector<Registro> search(T key) const; // retorna todos los registros guardados en el mismo de bucket(mismo key)
+    vector<Registro> search(T key); // retorna todos los registros guardados en el mismo de bucket(mismo key)
     bool add(Registro registro);
     bool remove(T key);
 
@@ -57,7 +58,7 @@ directory_EH<T>::~directory_EH() {
 }
 
 template <typename T>
-vector<Registro> directory_EH<T>::search(T key) const {
+vector<Registro> directory_EH<T>::search(T key) {
     // aplicar la funcion hash y obtener la secuencia D-bit
     string bucketIndex = getBucketIndex(key);
 
@@ -109,7 +110,7 @@ void directory_EH<T>::doubleDir() {
 }
 
 template <typename T>
-void directory_EH<T>::splitBucket(int bucketIndex) {
+void directory_EH<T>::splitBucket(string bucketIndex) {
     Bucket_EH<T>* bucket = directory[bucketIndex];
     int localDepth = bucket->getDepth();
 
@@ -120,16 +121,15 @@ void directory_EH<T>::splitBucket(int bucketIndex) {
 
     unordered_map<string, Bucket_EH<T>*> newDirectory;
 
-    for (auto& pair : directory){
+    for (auto& pair : directory) {
         string oldIndex = pair.first;
         Bucket_EH<T>* oldBucket = pair.second;
 
-        if (oldBucket == bucket){
+        if (oldBucket == bucket) {
             string newPrefix = oldIndex.substr(0, localDepth);
             newDirectory[newPrefix + "0"] = bucket;
-            newDirectory[newPrefix + "1"] = new Bucket_EH<T>(size_bucket + 1);
-        }
-        else {
+            newDirectory[newPrefix + "1"] = new Bucket_EH<T>(size_bucket, bucket->getDepth());
+        } else {
             newDirectory[oldIndex] = oldBucket;
         }
     }
@@ -148,6 +148,53 @@ std::string directory_EH<T>::getBucketIndex(T key) {
     string HashBitString = binaryHash.to_string();
     //retorna los Deph global digitos que se usaran para directorio
     return HashBitString.substr(HashBitString.size() - this->globalDepth);
+}
+
+template <typename T>
+void directory_EH<T>::save() {
+    std::ofstream indexFile("index_eh.dat", std::ios::binary);
+    std::ofstream dataFile("data_eh.dat", std::ios::binary);
+
+    indexFile.write(reinterpret_cast<const char*>(&globalDepth), sizeof(globalDepth));
+    int dirSize = directory.size();
+    indexFile.write(reinterpret_cast<const char*>(&dirSize), sizeof(dirSize));
+
+    for (const auto& pair : directory) {
+        size_t indexSize = pair.first.size();
+        indexFile.write(reinterpret_cast<const char*>(&indexSize), sizeof(indexSize));
+        indexFile.write(pair.first.c_str(), indexSize);
+
+        int bucketOffset = dataFile.tellp();
+        indexFile.write(reinterpret_cast<const char*>(&bucketOffset), sizeof(bucketOffset));
+
+        pair.second->save(dataFile);
+    }
+}
+
+template <typename T>
+void directory_EH<T>::load() {
+    std::ifstream indexFile("index_eh.dat", std::ios::binary);
+    std::ifstream dataFile("data_eh.dat", std::ios::binary);
+
+    indexFile.read(reinterpret_cast<char*>(&globalDepth), sizeof(globalDepth));
+    int dirSize;
+    indexFile.read(reinterpret_cast<char*>(&dirSize), sizeof(dirSize));
+
+    for (int i = 0; i < dirSize; ++i) {
+        size_t indexSize;
+        indexFile.read(reinterpret_cast<char*>(&indexSize), sizeof(indexSize));
+        std::string bucketIndex(indexSize, '\0');
+        indexFile.read(&bucketIndex[0], indexSize);
+
+        int bucketOffset;
+        indexFile.read(reinterpret_cast<char*>(&bucketOffset), sizeof(bucketOffset));
+        dataFile.seekg(bucketOffset);
+
+        Bucket_EH<T>* bucket = new Bucket_EH<T>(size_bucket, globalDepth);
+        bucket->load(dataFile);
+
+        directory[bucketIndex] = bucket;
+    }
 }
 
 #endif //PROYECTO1_BASE_DE_DATOS_II_EXTENDIBLEHASHING_HH
