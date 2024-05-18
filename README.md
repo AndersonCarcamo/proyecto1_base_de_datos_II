@@ -2,9 +2,9 @@
 # Efficient Data Structures for File Organization
 
 ## INTEGRANTES:
-- Anderson Carcamo [@artrivas](https://github.com/artrivas)
-- Sebastian Chu [@andrewkc](https://github.com/andrewkc)
-- Cristopher Meneses [@fnction](https://github.com/CRISTOPHER2207)
+- Anderson Carcamo 
+- Sebastian Chu [@ChuSebastian](https://github.com/ChuSebastian)
+- Cristopher Meneses 
 
 
 ![NBA Logo]([https://www.google.com/url?sa=i&url=https%3A%2F%2Fes.wikipedia.org%2Fwiki%2FPok%25C3%25A9mon_%2528serie_de_videojuegos%2529&psig=AOvVaw0ndNwlEkpfiBNLzL9STDFR&ust=1716155256874000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNjpk7OWmIYDFQAAAAAdAAAAABAE])
