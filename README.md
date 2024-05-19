@@ -307,7 +307,81 @@ Pokemon search(int key) {
     return p;
 }
 ```
+# Búsqueda por Rango en el ISAM
 
+La búsqueda por rango en el ISAM permite obtener todos los registros de Pokémon cuyas claves se encuentran entre dos valores dados. Este proceso se realiza de manera eficiente utilizando los índices de primer y segundo nivel.
+
+## Proceso de Búsqueda por Rango
+
+1. **Verificar las Llaves:** Asegurarse de que las llaves de búsqueda se encuentren dentro del rango válido.
+2. **Buscar en el Primer Nivel:** Leer el índice de primer nivel para encontrar la entrada más cercana a la primera clave.
+3. **Buscar en el Segundo Nivel:** Utilizar la entrada del primer nivel para leer el índice de segundo nivel y refinar la búsqueda.
+4. **Buscar en el Archivo de Datos:** Acceder al archivo de datos utilizando la posición obtenida del índice de segundo nivel para encontrar los registros dentro del rango especificado.
+
+```cpp
+vector<Pokemon> range_search(int key1, int key2) {
+    if (key1 < 1 || key1 > 1072 || key2 < 1 || key2 > 1072) {
+        throw invalid_argument("¡Ingrese una llave válida!");
+    }
+
+    // Leer el índice de primer nivel
+    vector<PokemonIndex1> first_level_indexes = read_all_index();
+
+    // Encontrar la entrada del primer nivel más cercana a la primera clave
+    PokemonIndex1 first_level;
+    for (auto &index : first_level_indexes) {
+        if (index.get_key() == key1) {
+            vector<Pokemon> p = read_while(index.get_pos(), key2);
+            return p;
+        } else if (index.get_key() < key1)
+            first_level = index;
+        else
+            break;
+    }
+
+    // Leer el índice de segundo nivel a partir de la posición del primer nivel
+    vector<PokemonIndex2> second_level_indexes = read_part_index(first_level.get_vector_pos());
+
+    // Encontrar la entrada del segundo nivel más cercana a la primera clave
+    PokemonIndex2 second_level;
+    for (auto &index : second_level_indexes) {
+        if (index.get_key() == key1) {
+            vector<Pokemon> p = read_while(index.get_pos(), key2);
+            return p;
+        } else if (index.get_key() < key1)
+            second_level = index;
+        else
+            break;
+    }
+
+    // Acceder al archivo de datos para buscar los registros dentro del rango
+    fstream file(DATOS, ios::in | ios::binary);
+    if (!file)
+        throw runtime_error("Error al leer datos");
+    file.seekg(second_level.get_pos(), ios::beg);
+
+    Pokemon p;
+    vector<Pokemon> pokemon;
+
+    for (int i = 0; i < 4; ++i) {
+        file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+        if (p.get_key() == key1) {
+            pokemon.push_back(p);
+            break;
+        }
+    }
+
+    while (file.peek() != EOF) {
+        file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+        pokemon.push_back(p);
+        if (p.get_key() == key2)
+            break;
+    }
+
+    return pokemon;
+}
+
+```
 ### 3.2 AVL
 #AVL Tree File Handling for Pokémon Records
 
