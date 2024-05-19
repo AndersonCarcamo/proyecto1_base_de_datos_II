@@ -199,11 +199,38 @@ Para el extendible hashing se han implementando los metodos:
 ### 3.2 ISAM
 
 ### 3.2 AVL
+#AVL Tree File Handling for Pokémon Records
 
-
-# AVL Tree File Handling for Pokémon Records
+![Pokémon Records](arbolavl.jpg)
 
 Este proyecto implementa un árbol AVL para manejar registros de Pokémon almacenados en un archivo binario. Los registros son leídos de un archivo CSV y se almacenan en un archivo binario, manteniendo un árbol AVL para permitir búsquedas eficientes, inserciones y eliminaciones.
+
+## Introducción
+
+Un árbol AVL es un tipo de árbol binario de búsqueda auto-balanceado, nombrado así en honor a sus inventores Adelson-Velsky y Landis. La principal característica de un árbol AVL es que para cada nodo, la diferencia de alturas entre sus subárboles izquierdo y derecho no puede ser mayor que uno. Esta propiedad de balanceo se mantiene mediante la realización de rotaciones durante las operaciones de inserción y eliminación.
+
+### Rotaciones en Árboles AVL
+
+1. **Rotación Simple a la Derecha:** Se usa cuando el subárbol izquierdo de un nodo se desequilibra hacia la izquierda.
+2. **Rotación Simple a la Izquierda:** Se usa cuando el subárbol derecho de un nodo se desequilibra hacia la derecha.
+3. **Rotación Doble a la Izquierda-Derecha:** Se usa cuando el subárbol izquierdo de un nodo se desequilibra hacia la derecha.
+4. **Rotación Doble a la Derecha-Izquierda:** Se usa cuando el subárbol derecho de un nodo se desequilibra hacia la izquierda.
+
+## Técnica Utilizada
+
+El proceso del proyecto se puede dividir en varias etapas clave:
+
+1. **Lectura del Archivo CSV:** Los registros de Pokémon se leen de un archivo CSV que contiene información estructurada de cada Pokémon. Esta información incluye atributos como el nombre, tipo, estadísticas y otros detalles relevantes.
+
+2. **Almacenamiento en Archivo Binario:** Los registros leídos se almacenan en un archivo binario. Esto permite un acceso rápido y eficiente a los datos, además de reducir el espacio de almacenamiento comparado con un archivo de texto.
+
+3. **Manejo del Árbol AVL:**
+   - **Inserción:** Cada vez que un nuevo registro de Pokémon se añade al archivo binario, se inserta en el árbol AVL. Durante la inserción, se realizan las rotaciones necesarias para mantener el equilibrio del árbol.
+   - **Búsqueda:** Para encontrar un registro específico, el árbol AVL permite una búsqueda eficiente al reducir el número de comparaciones necesarias.
+   - **Eliminación:** Similar a la inserción, la eliminación de un registro requiere ajustar el árbol para mantener su equilibrio, lo que puede implicar varias rotaciones.
+
+4. **Actualización del Archivo Binario:** Al eliminar o modificar registros, se actualiza el archivo binario para reflejar los cambios. El árbol AVL se ajusta en consecuencia para mantener su estructura balanceada.
+
 
 ## Estructura de Datos
 
