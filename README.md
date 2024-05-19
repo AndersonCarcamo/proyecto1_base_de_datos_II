@@ -200,6 +200,204 @@ Para el extendible hashing se han implementando los metodos:
 
 ### 3.2 AVL
 
+
+# AVL Tree File Handling for Pokémon Records
+
+Este proyecto implementa un árbol AVL para manejar registros de Pokémon almacenados en un archivo binario. Los registros son leídos de un archivo CSV y se almacenan en un archivo binario, manteniendo un árbol AVL para permitir búsquedas eficientes, inserciones y eliminaciones.
+
+## Estructura de Datos
+
+### Estructura `Record`
+
+La estructura `Record` almacena los datos de un Pokémon:
+
+```cpp
+struct Record {
+    int key;
+    int pokedex;
+    char name[50];
+    char type1[20];
+    char type2[20];
+    int total;
+    int hp;
+    int attack;
+    int defense;
+    int sp_attack;
+    int sp_defense;
+    int speed;
+    int generation;
+    bool legendary;
+    long left;
+    long right;
+    int height;
+
+    Record() : key(0), pokedex(0), total(0), hp(0), attack(0), defense(0),
+               sp_attack(0), sp_defense(0), speed(0), generation(0), legendary(false),
+               left(-1), right(-1), height(0) {
+        memset(name, 0, sizeof(name));
+        memset(type1, 0, sizeof(type1));
+        memset(type2, 0, sizeof(type2));
+    }
+
+    void showData() const {
+        cout << key << " " << pokedex << " " << name << " " << type1 << " " << type2 << " "
+             << total << " " << hp << " " << attack << " " << defense << " "
+             << sp_attack << " " << sp_defense << " " << speed << " " << generation << " "
+             << (legendary ? "TRUE" : "FALSE") << endl;
+    }
+};
+````
+#### Métodos
+find(int key)
+
+Busca un registro en el árbol AVL basado en la clave proporcionada.
+```cpp
+ Record find(int key) {
+    ifstream file(filename, ios::binary);
+    Record result = find(root_pos, key, file);
+    file.close();
+    return result;
+}
+```
+
+insert(Record record)
+
+Inserta un nuevo registro en el árbol AVL. El método se asegura de que el árbol permanezca balanceado después de la inserción.
+```cpp
+void insert(Record record) {
+    fstream f(this->filename, ios::in | ios::out | ios::binary);
+    insert(root_pos, record, f);
+    writeRootPosition();
+    f.close();
+}
+```
+remove(int key)
+
+Elimina un registro del árbol AVL basado en la clave proporcionada. El método ajusta el árbol para mantener el balance después de la eliminación.
+```cpp
+template <class T>
+void remove(T key) {
+    fstream f(this->filename, ios::in | ios::out | ios::binary);
+    remove(root_pos, key, f);
+    writeRootPosition();
+    f.close();
+}
+```
+searchRange(int start, int end)
+
+Realiza una búsqueda de rango en el árbol AVL, devolviendo todos los registros cuyas claves están dentro del rango especificado.
+```cpp
+vector<Record> searchRange(int start, int end) {
+    std::vector<Record> result;
+    ifstream file(filename, ios::binary);
+    searchRange(root_pos, start, end, result, file);
+    file.close();
+    return result;
+}
+```
+####Funciones Internas
+
+#####Remove
+El método remove elimina un registro del árbol AVL. Su funcionamiento se divide en:
+
+1. Obtención del Nodo: Busca el nodo con la clave proporcionada.
+2. Eliminación del Registro: Si el nodo es encontrado, se elimina y el árbol se rebalancea.
+3. Rebalanceo: Ajusta el árbol para mantener las propiedades del árbol AVL.
+
+```cpp
+template <class T>
+void remove(long& pos_node, T key, fstream& file) {
+    if (pos_node == -1) return;
+
+    Record curr_record;
+    file.seekg(pos_node, ios::beg);
+    file.read((char*)&curr_record, sizeof(Record));
+
+    if (key < curr_record.key) {
+        remove(curr_record.left, key, file);
+    } else if (key > curr_record.key) {
+        remove(curr_record.right, key, file);
+    } else {
+        if (curr_record.left == -1 && curr_record.right == -1) {
+            pos_node = -1;
+        } else if (curr_record.left == -1) {
+            pos_node = curr_record.right;
+        } else if (curr_record.right == -1) {
+            pos_node = curr_record.left;
+        } else {
+            long min_larger_node = findMin(curr_record.right, file);
+            Record min_larger_record;
+            file.seekg(min_larger_node, ios::beg);
+            file.read((char*)&min_larger_record, sizeof(Record));
+            curr_record = min_larger_record;
+
+            file.seekp(pos_node, ios::beg);
+            file.write((char*)&curr_record, sizeof(Record));
+
+            remove(curr_record.right, min_larger_record.key, file);
+        }
+    }
+
+    if (pos_node != -1) {
+        file.seekp(pos_node, ios::beg);
+        file.write((char*)&curr_record, sizeof(Record));
+
+        updateHeight(pos_node, file);
+        balance(pos_node, file);
+    }
+}
+```
+#####Insert
+El método insert añade un nuevo registro al árbol AVL, ajustando el árbol para mantener el balance.
+```cpp
+void insert(long& pos_node, Record record, fstream& file) {
+    if (pos_node == -1) {
+        file.seekp(0, ios::end);
+        pos_node = file.tellp();
+        file.write((char*)&record, sizeof(Record));
+        return;
+    }
+
+    Record curr_record;
+    file.seekg(pos_node, ios::beg);
+    file.read((char*)&curr_record, sizeof(Record));
+
+    if (record.key < curr_record.key) {
+        insert(curr_record.left, record, file);
+    } else if (record.key > curr_record.key) {
+        insert(curr_record.right, record, file);
+    }
+
+    file.seekp(pos_node, ios::beg);
+    file.write((char*)&curr_record, sizeof(Record));
+
+    updateHeight(pos_node, file);
+    balance(pos_node, file);
+}
+```
+#####SearchRange
+El método searchRange realiza una búsqueda de todos los registros cuyas claves están dentro de un rango especificado.
+```cpp
+void searchRange(long pos_node, int start, int end, vector<Record>& result, ifstream& file) {
+    if (pos_node == -1) return;
+
+    Record curr_record;
+    file.seekg(pos_node, ios::beg);
+    file.read((char*)&curr_record, sizeof(Record));
+
+    if (curr_record.key >= start && curr_record.key <= end) {
+        result.push_back(curr_record);
+        searchRange(curr_record.left, start, end, result, file);
+        searchRange(curr_record.right, start, end, result, file);
+    } else if (curr_record.key < start) {
+        searchRange(curr_record.right, start, end, result, file);
+    } else if (curr_record.key > end) {
+        searchRange(curr_record.left, start, end, result, file);
+    }
+}
+```
+
+
 ## 4. Parser
 
 El parser se ha realizado con flex y bison. Esto requiere solo un análisis de los token requeridos para las consultas sql.
