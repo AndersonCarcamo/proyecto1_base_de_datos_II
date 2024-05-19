@@ -1,6 +1,9 @@
 # Proyecto 1 Base de Datos 2
 # Efficient Data Structures for File Organization
 
+[![Título del Video]([https://img.youtube.com/vi/ID_DEL_VIDEO/maxresdefault.jpg)](https://www.youtube.com/watch?v=ID_DEL_VIDEO](https://www.youtube.com/watch?v=JfH7mxtyovg))
+
+
 ## INTEGRANTES:
 - Anderson Carcamo
 - Sebastian Chu [@ChuSebastian](https://github.com/ChuSebastian)
