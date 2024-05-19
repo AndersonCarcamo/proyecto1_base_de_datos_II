@@ -12,7 +12,7 @@
 El objetivo de nuestro proyecto es implementar tres estructuras de organización de archivos para una recuperación y manipulación eficiente de datos. Las estructuras elegidas son:
 
 - AVL file
-- ISAM 
+- ISAM (sebastian chu)
 - Extendible Hashing
 
 Nuestras estructuras tendrán las siguientes funciones:
@@ -20,4 +20,4 @@ Nuestras estructuras tendrán las siguientes funciones:
 - **Buscar**: dada una clave, devolveremos los registros respectivos.
 - **Búsqueda de rango**: dado un rango de claves, devuelve todos los registros cuyas claves estén dentro del rango.
 - **Agregar**: agrega un nuevo registro al archivo.
-- **Eliminar**: eliminar un registro del archivo.
+
