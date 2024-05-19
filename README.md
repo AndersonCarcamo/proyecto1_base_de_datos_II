@@ -197,6 +197,116 @@ Para el extendible hashing se han implementando los metodos:
    ```        
 
 ### 3.2 ISAM
+# ISAM Tree File Handling for Pokémon Records
+
+![Pokémon Records](https://example.com/pokemon_records_image.jpg)
+
+Este proyecto implementa un árbol ISAM (Indexed Sequential Access Method) para manejar registros de Pokémon almacenados en un archivo binario. Los registros son leídos de un archivo CSV y se almacenan en un archivo binario, utilizando un árbol ISAM para permitir búsquedas eficientes, inserciones y eliminaciones.
+
+## Introducción
+
+El ISAM (Indexed Sequential Access Method) es una técnica de acceso a archivos que permite un acceso eficiente y rápido a registros de datos. Se utiliza comúnmente en bases de datos y sistemas de gestión de archivos para mejorar el rendimiento de las operaciones de búsqueda, inserción y eliminación. El ISAM utiliza una estructura de índices de varios niveles para acelerar la localización de los registros en el archivo de datos.
+
+### Estructura del ISAM
+
+1. **Archivo de Datos:** Contiene los registros de Pokémon.
+2. **Índice de Primer Nivel:** Contiene entradas que apuntan a bloques en el segundo nivel de índices.
+3. **Índice de Segundo Nivel:** Contiene entradas que apuntan a bloques en el archivo de datos.
+
+## Técnica Utilizada
+
+### Construcción del ISAM
+
+La construcción del ISAM implica leer los registros de Pokémon desde un archivo CSV y organizarlos en un archivo de datos binario, mientras se crean los índices de primer y segundo nivel.
+
+```cpp
+void build() {
+    vector<Pokemon> pokemon = read_csv_to_pokemon();  // O(n)
+
+    int contador_pos = 0;
+    create_files();  // crea los archivos y los abre (1 sola vez)
+
+    for (Pokemon p : pokemon) {
+        datafile.write(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+
+        if (p.get_key() % 4 == 1) {
+            streampos pos = datafile.tellp() - static_cast<streampos>(sizeof(Pokemon));
+            PokemonIndex2 p2(p.get_key(), pos);
+            secondindex.write(reinterpret_cast<char *>(&p2), sizeof(PokemonIndex2));
+
+            if (p.get_key() % 16 == 1) {
+                PokemonIndex1 p1(p.get_key(), pos, contador_pos);
+                firstindex.write(reinterpret_cast<char *>(&p1), sizeof(PokemonIndex1));
+                contador_pos = contador_pos + 4;
+            }
+        }
+    }
+
+    close_files();  // cierra los archivos
+}
+```
+# Búsquedas en el ISAM
+
+## Búsqueda en el ISAM
+
+La búsqueda en el ISAM se realiza de manera jerárquica, comenzando desde el primer nivel de índices, pasando al segundo nivel, y finalmente accediendo al archivo de datos.
+
+1. **Buscar en el Primer Nivel:** Se lee el índice de primer nivel para encontrar la entrada más cercana a la clave de búsqueda.
+2. **Buscar en el Segundo Nivel:** A partir de la entrada del primer nivel, se lee el índice de segundo nivel para refinar la búsqueda.
+3. **Buscar en el Archivo de Datos:** Finalmente, se accede al archivo de datos utilizando la posición obtenida del índice de segundo nivel para encontrar el registro deseado.
+
+```cpp
+Pokemon search(int key) {
+    if (key < 1 || key > 1072) {
+        throw invalid_argument("Ingrese una llave valida!");
+    }
+
+    // Leer el índice de primer nivel
+    vector<PokemonIndex1> first_level_indexes = read_all_index();
+
+    // Encontrar la entrada del primer nivel más cercana a la clave
+    PokemonIndex1 first_level;
+    for (auto &index : first_level_indexes) {
+        if (index.get_key() == key) {
+            Pokemon p = physical_read(index.get_pos());
+            return p;
+        } else if (index.get_key() < key)
+            first_level = index;
+        else
+            break;
+    }
+
+    // Leer el índice de segundo nivel a partir de la posición del primer nivel
+    vector<PokemonIndex2> second_level_indexes = read_part_index(first_level.get_vector_pos());
+
+    // Encontrar la entrada del segundo nivel más cercana a la clave
+    PokemonIndex2 second_level;
+    for (auto &index : second_level_indexes) {
+        if (index.get_key() == key) {
+            Pokemon p = physical_read(index.get_pos());
+            return p;
+        } else if (index.get_key() < key)
+            second_level = index;
+        else
+            break;
+    }
+
+    // Acceder al archivo de datos para buscar el registro
+    fstream file(DATOS, ios::in | ios::binary);
+    if (!file)
+        throw runtime_error("Error al leer datos");
+    file.seekg(second_level.get_pos(), ios::beg);
+
+    Pokemon p;
+    for (int i = 0; i < 4; ++i) {
+        file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+        if (p.get_key() == key)
+            return p;
+    }
+
+    return p;
+}
+```
 
 ### 3.2 AVL
 #AVL Tree File Handling for Pokémon Records
