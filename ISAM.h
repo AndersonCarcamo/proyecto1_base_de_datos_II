@@ -39,8 +39,6 @@ class ISAM {
         int contador_pos = 0;
 
         // Hay 1072 registros de pokemon en total y queremos crear indices proporcionales
-        // Fue una coincidencia que la cantidad de registros fuera multiplo de 16 xd.
-
         create_files();  // crea los archivos y los abre (1 sola vez)
 
         // Construir los archivos

@@ -7,21 +7,17 @@ int main() {
     ISAM isam;
     isam.build();
 
-    // try {
-    //     isam.search(10000).print_values();
-    // } catch (const invalid_argument& e) {
-    //     std::cerr << "Error: " << e.what() << std::endl;
-    // }
+    // rango de busqueda: 1 <= n <= 1072
+    cout << "Search 5 -----" << "\n";
+    isam.search(5).print_values();
+    cout << "\n";
 
-    isam.search(100).print_values();
+    cout << "Search 99 -----:" << "\n";
+    isam.search(99).print_values();
+    cout << "\n";
 
-    // vector<PokemonIndex1> vec = isam.read_all_index();
-
-    // for (auto& v : vec) {
-    //     v.print_values();
-    // }
-    // cout << endl;
-
+    cout << "Search 800 -----:" << "\n";
+    isam.search(800).print_values();
 
     return 0;
 }
