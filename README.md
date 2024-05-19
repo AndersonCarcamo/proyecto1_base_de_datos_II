@@ -247,7 +247,7 @@ struct Record {
     }
 };
 ````
-#### Métodos
+### Métodos
 find(int key)
 
 Busca un registro en el árbol AVL basado en la clave proporcionada.
@@ -295,9 +295,9 @@ vector<Record> searchRange(int start, int end) {
     return result;
 }
 ```
-####Funciones Internas
+###Funciones Internas
 
-#####Remove
+####Remove
 El método remove elimina un registro del árbol AVL. Su funcionamiento se divide en:
 
 1. Obtención del Nodo: Busca el nodo con la clave proporcionada.
@@ -347,7 +347,7 @@ void remove(long& pos_node, T key, fstream& file) {
     }
 }
 ```
-#####Insert
+###Insert
 El método insert añade un nuevo registro al árbol AVL, ajustando el árbol para mantener el balance.
 ```cpp
 void insert(long& pos_node, Record record, fstream& file) {
@@ -375,7 +375,7 @@ void insert(long& pos_node, Record record, fstream& file) {
     balance(pos_node, file);
 }
 ```
-#####SearchRange
+###SearchRange
 El método searchRange realiza una búsqueda de todos los registros cuyas claves están dentro de un rango especificado.
 ```cpp
 void searchRange(long pos_node, int start, int end, vector<Record>& result, ifstream& file) {
