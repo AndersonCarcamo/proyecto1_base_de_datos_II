@@ -153,10 +153,8 @@ class ISAM {
                 break;
         }
 
-        // Lee el segundo nivel de índices a partir de la posicion mas cercana
         vector<PokemonIndex2> second_level_indexes = read_part_index(first_level.get_vector_pos());
 
-        // Busca en el segundo nivel el índice más cercano a la clave, son solo 4 registros
         PokemonIndex2 second_level;
         for (auto &index : second_level_indexes) {
             if (index.get_key() == key1) {
@@ -171,7 +169,6 @@ class ISAM {
                 break;
         }
 
-        // Si no esta en los indices, abrimos el archivo de datos y buscamos ahi
         fstream file(DATOS, ios::in | ios::binary);
         if (!file)
             throw runtime_error("Error al leer datos");
@@ -180,7 +177,7 @@ class ISAM {
         Pokemon p;
         vector<Pokemon> pokemon;
 
-        for (int i = 0; i < 4; ++i) {  // solo puede estar dentro de estos 4 por como se definio el indice 2
+        for (int i = 0; i < 4; ++i) {
             file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
             if (p.get_key() == key1) {
                 pokemon.push_back(p);
