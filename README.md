@@ -1,7 +1,7 @@
 # Proyecto 1 Base de Datos 2
 # Efficient Data Structures for File Organization
 
-[![Título del Video]([https://img.youtube.com/vi/JfH7mxtyovg/maxresdefault.jpg)](https://www.youtube.com/watch?v=JfH7mxtyovg])
+[![VIDEO PROYECTO 1]([https://img.youtube.com/vi/JfH7mxtyovg/maxresdefault.jpg)](https://www.youtube.com/watch?v=JfH7mxtyovg])
 
 
 ## INTEGRANTES:
