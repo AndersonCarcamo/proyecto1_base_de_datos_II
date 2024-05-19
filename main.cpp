@@ -6,10 +6,14 @@ using namespace std;
 int main() {
     ISAM isam;
     // isam.build();
+    // try {
+    //     isam.search(10000).print_values();
+    // } catch (const invalid_argument& e) {
+    //     std::cerr << "Error: " << e.what() << std::endl;
+    // }
 
-    vector<PokemonIndex> records = isam.read_all_indexes(SECOND_INDEX);
+    isam.search(200).print_values();
 
-    for (auto& record : records) {
-        record.print_values();
-    }
+
+    return 0;
 }

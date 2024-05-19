@@ -72,17 +72,55 @@ class Pokemon {
     }
 };
 
-class PokemonIndex {
+class PokemonIndex1 {
+   private:
+    int key;
+    streampos pos;
+    int vector_pos;
+
+   public:
+    PokemonIndex1() {}
+    PokemonIndex1(int key, streampos pos, int vector_pos) : key(key), pos(pos), vector_pos(vector_pos) {}
+
+    void print_values() {
+        cout << "Key: " << key << "\n";
+        cout << "Pos: " << pos << "\n";
+        cout << "Vector Pos: " << vector_pos << "\n";
+    }
+
+    int get_key() {
+        return this->key;
+    }
+
+    int get_pos() {
+        return this->pos;
+    }
+
+    int get_vector_pos() {
+        return this->vector_pos;
+    }
+};
+
+class PokemonIndex2 {
    private:
     int key;
     streampos pos;
 
    public:
-    PokemonIndex() {}
-    PokemonIndex(int key, streampos pos) : key(key), pos(pos) {}
+    PokemonIndex2() {}
+    PokemonIndex2(int key, streampos pos) : key(key), pos(pos) {}
+
     void print_values() {
         cout << "Key: " << key << "\n";
-        cout << "Pos: " << pos << "\n"; 
+        cout << "Pos: " << pos << "\n";
+    }
+
+    int get_key() {
+        return this->key;
+    }
+
+    int get_pos() {
+        return this->pos;
     }
 };
 

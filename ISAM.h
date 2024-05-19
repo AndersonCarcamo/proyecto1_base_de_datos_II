@@ -40,7 +40,10 @@ class ISAM {
 
         create_files();  // crea los archivos y los abre (1 sola vez)
 
+        // Construir los archivos
         for (Pokemon p : pokemon) {
+            int contador_pos = 0;
+
             datafile.write(reinterpret_cast<char *>(&p), sizeof(Pokemon));
 
             // Queremos guardar la serie 1, 5, 9, 13, 17, ..., 4n + 1.
@@ -50,28 +53,99 @@ class ISAM {
                 streampos pos = datafile.tellp() - static_cast<streampos>(sizeof(Pokemon));
 
                 // Creamos un PokemonIndex que solo guarda la llave y la position
-                PokemonIndex pi(p.get_key(), pos);
+                PokemonIndex2 p2(p.get_key(), pos);
 
                 // Se escribe el registro en el index
-                secondindex.write(reinterpret_cast<char *>(&pi), sizeof(PokemonIndex));
+                secondindex.write(reinterpret_cast<char *>(&p2), sizeof(PokemonIndex2));
 
                 // Queremos guardar la serie 1, 17, 33, 49, ..., 16n + 1.
                 // Hay 4 registros de pokemon por indice en el primer nivel. (67 registros)
 
-                // Ponemos este if dentro del otro porque los valores se repetiran, mod 16 es subconjuto de mod 4
-                // No hace falta volver a instanciar otro objeto PokemonIndex.
-
-                if (p.get_key() % 16 == 1)
-                    firstindex.write(reinterpret_cast<char *>(&pi), sizeof(PokemonIndex));
+                if (p.get_key() % 16 == 1) {
+                    PokemonIndex1 p1(p.get_key(), pos, contador_pos);
+                    firstindex.write(reinterpret_cast<char *>(&p1), sizeof(PokemonIndex1));
+                    contador_pos++;
+                }
             }
         }
 
         close_files();  // cierra los archivos
     }
 
-    // Pokemon search(int key) {}
+    Pokemon search(int key) {
+        if (key < 1 || key > 1072) {
+            throw invalid_argument("Ingrese una llave valida!");
+        }
 
-    Pokemon read_data(int pos) {
+        // La idea es buscar de mas general a mas especifico, primero en el nivel uno, luego en el 2 y luego en el archivo fisico
+
+        // Lee el primer nivel de índices
+        vector<PokemonIndex1> first_level_indexes = read_all_index();
+
+        // Busca en el primer nivel el índice más cercano a la clave
+        PokemonIndex1 first_level;
+        for (auto &index : first_level_indexes) {
+            if (index.get_key() == key) {
+                Pokemon p = physical_read(index.get_pos());
+                return p;
+            }
+
+            else if (index.get_key() < key)
+                first_level = index;
+
+            else
+                break;
+        }
+
+        // Lee el segundo nivel de índices a partir de la posicion mas cercana
+        vector<PokemonIndex2> second_level_indexes = read_part_index(first_level.get_vector_pos());
+
+        // Busca en el segundo nivel el índice más cercano a la clave, son solo 4 registros
+        PokemonIndex2 second_level;
+        for (auto &index : second_level_indexes) {
+            if (index.get_key() == key) {
+                Pokemon p = physical_read(index.get_pos());
+                return p;
+            }
+
+            else if (index.get_key() < key)
+                second_level = index;
+
+            else
+                break;
+        }
+
+        // Si no esta en los indices, abrimos el archivo de datos y buscamos ahi
+        fstream file(DATOS, ios::in | ios::binary);
+        if (!file)
+            throw runtime_error("Error al leer datos");
+        file.seekg(second_level.get_pos(), ios::beg);
+       
+        Pokemon p;
+
+        for (int i = 0; i < 4; ++i) {  // solo puede estar dentro de estos 4 por como se definio el indice 2
+            file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+            
+            if (p.get_key() == key)
+                return p;
+        }
+
+        return p;
+    }
+
+    // Lee la posicion fisica en el archivo de datos
+    Pokemon physical_read(int pos) {
+        fstream file(DATOS, ios::in | ios::binary);
+        if (!file)
+            throw runtime_error("Error al leer datos");
+        file.seekg(pos, ios::beg);
+        Pokemon p;
+        file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+        return p;
+    }
+
+    // Lee la posicion logica en el archivo de datos
+    Pokemon logical_read(int pos) {
         fstream file(DATOS, ios::in | ios::binary);
         if (!file)
             throw runtime_error("Error al leer datos");
@@ -81,26 +155,37 @@ class ISAM {
         return p;
     }
 
-    PokemonIndex read_index(int pos, string index_name) {
-        fstream file(index_name, ios::in | ios::binary);
-        if (!file)
-            throw runtime_error("Error al leer indice");
-        file.seekg(pos * sizeof(PokemonIndex), ios::beg);
-        PokemonIndex pi;
-        file.read(reinterpret_cast<char *>(&pi), sizeof(PokemonIndex));
-        return pi;
-    }
-
-    vector<PokemonIndex> read_all_indexes(string index_name) {
-        fstream file(index_name, ios::in | ios::binary);
+    // Guarda todos los registros del Indice 1 (raiz) y los almacena en un vector
+    vector<PokemonIndex1> read_all_index() {
+        fstream file(FIRST_INDEX, ios::in | ios::binary);
         if (!file)
             throw runtime_error("Error al leer indices");
-        vector<PokemonIndex> indexes;
+        vector<PokemonIndex1> indexes;
         while (file.peek() != EOF) {
-            PokemonIndex pi;
-            file.read(reinterpret_cast<char *>(&pi), sizeof(PokemonIndex));
-            indexes.push_back(pi);
+            PokemonIndex1 p;
+            file.read(reinterpret_cast<char *>(&p), sizeof(PokemonIndex1));
+            indexes.push_back(p);
         }
+        file.close();
+        return indexes;
+    }
+
+    // Guarda solamente 4 registros del Indice 2 y los almacena en un vector
+    vector<PokemonIndex2> read_part_index(int vector_pos) {
+        fstream file(SECOND_INDEX, ios::in | ios::binary);
+        if (!file)
+            throw runtime_error("Error al leer indices");
+        vector<PokemonIndex2> indexes;
+        file.seekg(vector_pos * sizeof(PokemonIndex2));
+
+        for (int i = 0; i < 4; ++i) {
+            if (file.peek() == EOF)
+                break;
+            PokemonIndex2 p;
+            file.read(reinterpret_cast<char *>(&p), sizeof(PokemonIndex2));
+            indexes.push_back(p);
+        }
+
         file.close();
         return indexes;
     }
