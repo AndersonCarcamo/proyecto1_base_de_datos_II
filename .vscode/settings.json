@@ -2,6 +2,11 @@
     "files.associations": {
         "iostream": "cpp",
         "vector": "cpp",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "iosfwd": "cpp",
+        "ios": "cpp",
+        "__split_buffer": "cpp",
+        "string": "cpp",
+        "ostream": "cpp"
     }
 }

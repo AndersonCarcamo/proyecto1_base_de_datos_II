@@ -132,6 +132,72 @@ class ISAM {
         return p;
     }
 
+    vector<Pokemon> range_search(int key1, int key2) {
+        if (key1 < 1 || key1 > 1072 || key2 < 1 || key2 > 1072) {
+            throw invalid_argument("Ingrese una llave valida!");
+        }
+
+        vector<PokemonIndex1> first_level_indexes = read_all_index();
+
+        PokemonIndex1 first_level;
+        for (auto &index : first_level_indexes) {
+            if (index.get_key() == key1) {
+                vector<Pokemon> p = read_while(index.get_pos(), key2);
+                return p;
+            }
+
+            else if (index.get_key() < key1)
+                first_level = index;
+
+            else
+                break;
+        }
+
+        // Lee el segundo nivel de índices a partir de la posicion mas cercana
+        vector<PokemonIndex2> second_level_indexes = read_part_index(first_level.get_vector_pos());
+
+        // Busca en el segundo nivel el índice más cercano a la clave, son solo 4 registros
+        PokemonIndex2 second_level;
+        for (auto &index : second_level_indexes) {
+            if (index.get_key() == key1) {
+                vector<Pokemon> p = read_while(index.get_pos(), key2);
+                return p;
+            }
+
+            else if (index.get_key() < key1)
+                second_level = index;
+
+            else
+                break;
+        }
+
+        // Si no esta en los indices, abrimos el archivo de datos y buscamos ahi
+        fstream file(DATOS, ios::in | ios::binary);
+        if (!file)
+            throw runtime_error("Error al leer datos");
+        file.seekg(second_level.get_pos(), ios::beg);
+
+        Pokemon p;
+        vector<Pokemon> pokemon;
+
+        for (int i = 0; i < 4; ++i) {  // solo puede estar dentro de estos 4 por como se definio el indice 2
+            file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+            if (p.get_key() == key1) {
+                pokemon.push_back(p);
+                break;
+            }
+        }
+
+        while (file.peek() != EOF) {
+            file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+            pokemon.push_back(p);
+            if (p.get_key() == key2)
+                break;
+        }
+
+        return pokemon;
+    }
+
     // Lee la posicion fisica en el archivo de datos
     Pokemon physical_read(int pos) {
         fstream file(DATOS, ios::in | ios::binary);
@@ -187,5 +253,23 @@ class ISAM {
 
         file.close();
         return indexes;
+    }
+
+    vector<Pokemon> read_while(int pos, int key) {
+        fstream file(DATOS, ios::in | ios::binary);
+        if (!file)
+            throw runtime_error("Error al leer datos");
+
+        vector<Pokemon> pokemon;
+        file.seekg(pos, ios::beg);
+
+        while (file.peek() != EOF) {
+            Pokemon p;
+            file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
+            pokemon.push_back(p);
+            if (p.get_key() == key)
+                break;
+        }
+        return pokemon;
     }
 };
