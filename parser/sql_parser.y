@@ -7,7 +7,6 @@
 
 
 using namespace std;
-using namespace sql_parser;
 
 directory_EH<string> hashTable(5, 5); // inicilizaremos con un deph global de 3 y size de bucket 4
 void loadCSVToHashTable(const std::string& filename, const std::string& key);
@@ -107,7 +106,17 @@ void sql_parser::Parser::error(const std::string& msg) {
     std::cerr << "Error: " << msg << '\n';
 }
 
-void loadCSVToHashTable(const std::string& filename, const std::string& key) {
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <iostream>
+#include "../extendiblehashing/registro.h"
+#include "../extendiblehashing/Bucket_EH.hh"
+#include "../extendiblehashing/ExtendibleHashing.hh"
+
+directory_EH<int> hashTable(10, 5); // Ajustado para usar int como clave
+
+void loadCSVToHashTable(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
@@ -121,31 +130,22 @@ void loadCSVToHashTable(const std::string& filename, const std::string& key) {
     while (std::getline(file, line)) {
         std::stringstream ss(line);
         std::string token;
-        Registro record;
-        bool isKeyColumn = false;
+        std::vector<std::string> values;
 
-        int colIdx = 0;
         while (std::getline(ss, token, ',')) {
-            if (firstLine) {
-                columns.push_back(token);
-                if (token == key) {
-                    isKeyColumn = true;
-                }
-            } else {
-                if (columns[colIdx] == key) {
-                    record.setKey(key, token);
-                } else {
-                    record.setField(columns[colIdx], token);
-                }
-                colIdx++;
-            }
+            values.push_back(token);
         }
 
-        if (!firstLine) {
+        if (firstLine) {
+            columns = values;
+            firstLine = false;
+        } else {
+            Registro record(0, "", "", "", "", 0, 0, "", "", "", "", "", "", "");
+            for (size_t i = 0; i < values.size(); ++i) {
+                record.setField(columns[i], values[i]);
+            }
             hashTable.add(record.getKey(), record);
         }
-
-        firstLine = false;
     }
 
     file.close();

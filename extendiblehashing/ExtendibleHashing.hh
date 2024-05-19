@@ -71,7 +71,7 @@ vector<Registro> directory_EH<T>::search(T key) {
 
 template <typename T>
 bool directory_EH<T>::add(Registro registro) {
-    string bucketIndex = getBucketIndex(registro.key);
+    string bucketIndex = getBucketIndex(registro.getKey());
     Bucket_EH<T>* bucket = directory[bucketIndex];
 
     if(!bucket->isFull())

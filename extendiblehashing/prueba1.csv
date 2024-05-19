@@ -1,0 +1,101 @@
+ID,Time_GMT,Phone,Organization,OLF,Rating,NumberReview,Category,Country,CountryCode,State,City,Street,Building
+1,3/12/2021 2:10,12562343500,The Station's Best,,4,4,Delivery,USA,US,AL,Alexander City, Jefferson,977
+2,3/12/2021 2:10,12566758004,Pizza Hut,,3,6,Delivery,USA,US,AL,Alexander City, 4581 Hwy,4581
+3,3/12/2021 2:10,12562342181,Zaxby's Chicken Fingers & Buffalo Wings,,3,13,Delivery,USA,US,AL,Alexander City, 4497 Highway,4497
+4,3/12/2021 2:10,12564097272,Papa John's Pizza,,1,1,Delivery,USA,US,AL,Alexander City, 2064 Cherokee,2064
+5,3/12/2021 2:10,12562155510,Arby's,,2,7,Delivery,USA,US,AL,Alexander City, 2593 Hwy,2593
+6,3/12/2021 2:16,12562343500,The Station's Best,,4,4,Delivery,USA,US,AL,Alexander City, Jefferson,977
+7,3/12/2021 2:16,12566758004,Pizza Hut,,3,6,Delivery,USA,US,AL,Alexander City, 4581 Hwy,4581
+8,3/12/2021 2:16,12562342181,Zaxby's Chicken Fingers & Buffalo Wings,,3,13,Delivery,USA,US,AL,Alexander City, 4497 Highway,4497
+9,3/12/2021 2:16,12564097272,Papa John's Pizza,,1,1,Delivery,USA,US,AL,Alexander City, 2064 Cherokee,2064
+10,3/12/2021 2:16,12562155510,Arby's,,2,7,Delivery,USA,US,AL,Alexander City, 2593 Hwy,2593
+11,3/12/2021 2:17,13342221398,Happy Kitchen,,3.5,11,Delivery,USA,US,AL,Andalusia, 700 Western Gate,700
+12,3/12/2021 2:17,13344271400,Ophelia's Italian Restaurant,,3.5,30,Delivery,USA,US,AL,Andalusia, River Falls,401
+13,3/12/2021 2:17,13342224106,Pizza Hut,,1.5,3,Delivery,USA,US,AL,Andalusia, 1203 Dr Martin Luther King Jr,1203
+14,3/12/2021 2:17,13345828484,Zaxby's Chicken Fingers & Buffalo Wings,,3.5,12,Delivery,USA,US,AL,Andalusia, River Falls,1000
+15,3/12/2021 2:17,13344278969,Arby's,,2,5,Delivery,USA,US,AL,Andalusia, 326 Dr Mlk Jr,326
+16,3/12/2021 2:17,13344278969,Arby's,,1,3,Delivery,USA,US,AL,Andalusia, 328 W,328
+17,3/12/2021 2:17,13342225005,Tropical Smoothie Cafe,,3,3,Delivery,USA,US,AL,Andalusia, 411 West,411
+18,3/12/2021 2:17,12567707256,Thai One On,,4,92,Delivery,USA,US,AL,Anniston, Noble,911
+19,3/12/2021 2:17,12562360305,House Of Chen,,4,10,Delivery,USA,US,AL,Anniston, E 43rd,4
+20,3/12/2021 2:17,12568319981,Jasmine Chinese Thai & Sushi,,4,32,Delivery,USA,US,AL,Oxford, Snow,1225
+21,3/12/2021 2:17,12568483131,Marco's Pizza,,4.5,3,Delivery,USA,US,AL,Anniston, 2485 US Hwy 431,2485
+22,3/12/2021 2:17,12568310678,Zheng's Garden Chinese Restaurant,,3.5,17,Delivery,USA,US,AL,Oxford, 135 Plaza,135
+23,3/12/2021 2:18,12568316588,J Wok,,3,6,Delivery,USA,US,AL,Oxford, 1807 US Hwy 78,1807
+24,3/12/2021 2:18,12564359940,Isshin Asian Cafe,,3.5,10,Delivery,USA,US,AL,Jacksonville, 815 Pelham Rd,815
+25,3/12/2021 2:18,12568207272,Papa John's Pizza,,4,3,Delivery,USA,US,AL,Anniston, 13 Bill Robison,13
+26,3/12/2021 2:18,12567820106,Struts of Jacksonville,,4,29,Delivery,USA,US,AL,Jacksonville, 500 Forney Ave,500
+27,3/12/2021 2:18,12568319033,Panda Express,,3,27,Delivery,USA,US,AL,Oxford, 20 Commons,20
+28,3/12/2021 2:18,12562373251,Pizza Hut,,2.5,5,Delivery,USA,US,AL,Anniston, 322 Blue Mountain,322
+29,3/12/2021 2:18,12568358102,Struts of Oxford,,3,38,Delivery,USA,US,AL,Oxford, 88 Ali,88
+30,3/12/2021 2:18,12568356725,Panera Bread,,3,41,Delivery,USA,US,AL,Oxford, 21 Commons,21
+31,3/12/2021 2:18,12567820008,Effina's Tuscan Grille,,3.5,48,Delivery,USA,US,AL,Jacksonville, 501 Pelham Rd,501
+32,3/12/2021 2:18,12568314911,Olive Garden Italian Restaurant,,3.5,39,Delivery,USA,US,AL,Oxford, 401 Oxford Exchange,401
+33,3/12/2021 2:18,12562364333,Popeyes Louisiana Kitchen,,3.5,5,Delivery,USA,US,AL,Anniston, 1925 Quintard,1925
+34,3/12/2021 2:18,12568206035,Arby's,,1,3,Delivery,USA,US,AL,Anniston, 5626 Mcclellan,5626
+35,3/12/2021 2:18,12563914715,Chicken Salad Chick - Oxford,,4,7,Delivery,USA,US,AL,Oxford, 501 Oxford Exchange,501
+36,3/12/2021 2:18,12568312615,Firehouse Subs,,4,7,Delivery,USA,US,AL,Oxford, 552 Oxford Exchange,552
+37,3/12/2021 2:18,12568324771,Zaxby's Chicken Fingers & Buffalo Wings,,3.5,15,Delivery,USA,US,AL,Oxford, 91 Colonial,91
+38,3/12/2021 2:18,12562388147,Arby's,,2,1,Delivery,USA,US,AL,Anniston, 1817 Quintard,1817
+39,3/12/2021 2:18,12562373132,Zaxby's Chicken Fingers & Buffalo Wings,,2.5,5,Delivery,USA,US,AL,Anniston, 3234 McClellan,3234
+40,3/12/2021 2:18,12565304100,Domino's Pizza,,2,4,Delivery,USA,US,AL,Anniston, 5130 McClellan,5130
+41,3/12/2021 2:18,12563652001,Jimmy John's,,4.5,2,Delivery,USA,US,AL,Jacksonville, 505 Pelham Rd,505
+42,3/12/2021 2:18,12564357272,Papa John's Pizza,,4.5,2,Delivery,USA,US,AL,Jacksonville, 702 South Pelham,702
+43,3/12/2021 2:18,12568353595,Cicis,,2.5,6,Delivery,USA,US,AL,Oxford, Snow,657
+44,3/12/2021 2:18,12568313926,Arby's,,3,3,Delivery,USA,US,AL,Oxford, 1003 Quintard,1003
+45,3/12/2021 2:18,12568357272,Papa John's Pizza,,2,4,Delivery,USA,US,AL,Oxford, 1225 Snow,1225
+46,3/12/2021 2:18,12568319854,Arby's,,3,6,Delivery,USA,US,AL,Oxford, 30 Oxford,30
+47,3/12/2021 2:18,12568319696,Domino's Pizza,,3,11,Delivery,USA,US,AL,Oxford, 1720 Hamric Dr,1720
+48,3/12/2021 2:18,12564358200,Domino's Pizza,,3,2,Delivery,USA,US,AL,Jacksonville, 405 Pelham Rd,405
+49,3/12/2021 2:18,12564355202,Pizza Hut,,4,1,Delivery,USA,US,AL,Jacksonville, 816 Pelham Rd,816
+50,3/12/2021 2:18,12564030346,Popeyes Louisiana Kitchen,,3.5,3,Delivery,USA,US,AL,Oxford, 123 Colonial,123
+51,3/12/2021 2:21,12562337627,Village Pizza,,3.5,59,Delivery,USA,US,AL,Athens, 222 Market St,222
+52,3/12/2021 2:21,12564444005,Ramona Js Resturant,,5,6,Delivery,USA,US,AL,Athens, 1212 US Hwy 31,1212
+53,3/12/2021 2:21,12562332299,Steak-Out,,2.5,6,Delivery,USA,US,AL,Athens, 1106 Jefferson St,1106
+54,3/12/2021 2:21,12568676147,Panera Bread,,3.5,5,Delivery,USA,US,AL,Athens, 1323 US Highway 72,1323
+55,3/12/2021 2:21,12562169994,Bojangles' Famous Chicken and Biscuits,,3.5,15,Delivery,USA,US,AL,Athens, 1316 US Highway 72,1316
+56,3/12/2021 2:21,12568001010,Marco's Pizza,,3,7,Delivery,USA,US,AL,Athens, 22099 Highway 72,22099
+57,3/12/2021 2:21,12569985300,Buffalo Wild Wings,,2.5,30,Delivery,USA,US,AL,Athens, 22099 Highway 72,22099
+58,3/12/2021 2:21,12562330098,Zaxby's Chicken Fingers & Buffalo Wings,,3.5,22,Delivery,USA,US,AL,Athens, 221 French Farms,221
+59,3/12/2021 2:21,12565623889,Panda Express,,4,1,Delivery,USA,US,AL,Athens, 22090 US Hwy,22090
+60,3/12/2021 2:21,12562334700,Domino's Pizza,,3.5,7,Delivery,USA,US,AL,Athens, 119 US Highway 31,119
+61,3/12/2021 2:21,12562323000,Papa John's Pizza,,4.5,3,Delivery,USA,US,AL,Athens, 916 Us Highway 72,916
+62,3/12/2021 2:21,12562161099,Papa Murphy's,,5,1,Delivery,USA,US,AL,Athens, 1001 Hwy 72,1001
+63,3/12/2021 2:21,12562165556,Firehouse Subs,,4,5,Delivery,USA,US,AL,Athens, 935 Hwy,935
+64,3/12/2021 2:21,12568581600,Al Shish Palace,,4.5,56,Delivery,USA,US,AL,Madison, 1591 Hughes,1591
+65,3/12/2021 2:21,12564610880,Golden China Restaurant,,4,32,Delivery,USA,US,AL,Madison, 300 Hughes,300
+66,3/12/2021 2:21,12564444710,Popeyes Louisiana Kitchen,,2,7,Delivery,USA,US,AL,Athens, 550 US Hwy 72,550
+67,3/12/2021 2:21,12562331223,Pizza Hut,,3.5,3,Delivery,USA,US,AL,Athens, 229 French Farms,229
+68,3/12/2021 2:21,12567211188,China Dragon,,4,20,Delivery,USA,US,AL,Madison, 7190 Wall Triana,7190
+69,3/12/2021 2:21,12563028024,Mangia Italian Restaurant,,3.5,14,Delivery,USA,US,AL,Huntsville, 2288 Zierdt,2288
+70,3/12/2021 2:21,12563250925,Rome2Greece,,4,87,Delivery,USA,US,AL,Madison, 1591 Hughes,1591
+71,3/12/2021 2:21,12568642019,Marco's Pizza,,4,31,Delivery,USA,US,AL,Madison, 7559 Hwy 72,7559
+72,3/12/2021 2:21,12567212323,Hibachi Express,,3.5,30,Delivery,USA,US,AL,Madison, 1079 Balch,1079
+73,3/12/2021 2:21,12562337507,Arby's,,2,4,Delivery,USA,US,AL,Athens, 600 US Hwy 72,600
+74,3/12/2021 2:21,12568908873,Panda Express,,2.5,38,Delivery,USA,US,AL,Madison, 8598 Hwy 72,8598
+75,3/12/2021 2:21,12567720990,New China Restaurant,,3,28,Delivery,USA,US,AL,Madison, 8580 Madison,8580
+76,3/12/2021 2:21,12563251633,Champy's Chicken,,4,89,Delivery,USA,US,AL,Madison, 8020 Madison,8020
+77,3/12/2021 2:21,12568308358,Earth and Stone Wood Fired Pizza,,3.5,24,Delivery,USA,US,AL,Madison, B 107 A Brookridge,B
+78,3/12/2021 2:21,12567729888,Sam & Greg's Pizzeria & Gelateria,,4,104,Delivery,USA,US,AL,Madison, 364 Hughes,364
+79,3/12/2021 2:21,12563251054,Marco's Pizza,,3.5,30,Delivery,USA,US,AL,Madison, 11156 County Line,11156
+80,3/12/2021 2:21,12568649997,Jimmy John's,,3.5,29,Delivery,USA,US,AL,Madison, 7690 Hwy 72,7690
+81,3/12/2021 2:21,12569639444,Big Shake's Hot Chicken and Fish,,4,134,Delivery,USA,US,AL,Huntsville, 671 Martin Rd,671
+82,3/12/2021 2:21,12569704441,MOD Pizza,,4,42,Delivery,USA,US,AL,Madison, 7616 Hwy 72,7616
+83,3/12/2021 2:22,12563251575,Teriyaki Madness,,3,31,Delivery,USA,US,AL,Madison, 7709 Hwy 72,7709
+84,3/12/2021 2:22,12569704330,Tropical Smoothie Cafe,,3.5,18,Delivery,USA,US,AL,Madison, 1079 Balch,1079
+85,3/12/2021 2:22,12562580880,Bruegger's Bagels,,3,30,Delivery,USA,US,AL,Madison, 347 Hughes,347
+86,3/12/2021 2:22,12568019463,Cork & Crust Pizzeria & Wine Bar,,3.5,102,Delivery,USA,US,AL,Madison, 12120 County Line,12120
+87,3/12/2021 2:22,12569702727,Domino's,,3.5,8,Delivery,USA,US,AL,Toney,7642,7642
+88,3/12/2021 2:22,12564149961,Chicken Salad Chick,,3.5,28,Delivery,USA,US,AL,Madison, 7709 Highway 72,7709
+89,3/12/2021 2:22,12567217831,Panera Bread,,3,50,Delivery,USA,US,AL,Madison, 8179 Highway 72,8179
+90,3/12/2021 2:22,12568301964,KFC,,2.5,15,Delivery,USA,US,AL,Madison, 7874 Highway 72,7874
+91,3/12/2021 2:22,12563250231,Firehouse Subs,,3,20,Delivery,USA,US,AL,Huntsville, 1079 Balch,1079
+92,3/12/2021 2:22,12567726789,Donatos Pizza,,3.5,25,Delivery,USA,US,AL,Madison, 8000 Madison,8000
+93,3/12/2021 2:22,12567748181,Apple Lane - Madison,,3.5,17,Delivery,USA,US,AL,Madison, 8580 Madison,8580
+94,3/12/2021 2:22,12564645300,Schlotzsky's,,3.5,19,Delivery,USA,US,AL,Madison, 8969 Highway,8969
+95,3/12/2021 2:22,12568642303,Arbys,,3.5,15,Delivery,USA,US,AL,Madison, 7785 Highway 72,7785
+96,3/12/2021 2:22,12567225565,Zaxby's Chicken Fingers & Buffalo Wings,,3,19,Delivery,USA,US,AL,Madison, 8586 Highway 72,8586
+97,3/12/2021 2:22,12567748028,Firehouse Subs,,3.5,12,Delivery,USA,US,AL,Madison, 8572 Madison,8572
+98,3/12/2021 2:22,12567729000,Domino's Pizza,,2.5,11,Delivery,USA,US,AL,Madison, 437 Hughes,437
+99,3/12/2021 2:22,12563251042,Jersey Mike's Subs,,3.5,12,Delivery,USA,US,AL,Madison, 8000 Madison,8000
+100,3/12/2021 2:22,12567728897,Pizza Hut,,2,18,Delivery,USA,US,AL,Madison, 8830 Madison,8830

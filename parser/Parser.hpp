@@ -177,7 +177,7 @@
 # define YYDEBUG 0
 #endif
 
-#line 13 "sql_parser.y"
+#line 22 "sql_parser.y"
 namespace sql_parser {
 #line 183 "Parser.hpp"
 
@@ -294,13 +294,12 @@ namespace sql_parser {
         S_command_list = 27,                     // command_list
         S_command = 28,                          // command
         S_create_table_command = 29,             // create_table_command
-        S_index_type = 30,                       // index_type
-        S_select_command = 31,                   // select_command
-        S_where_clause = 32,                     // where_clause
-        S_insert_command = 33,                   // insert_command
-        S_value_list = 34,                       // value_list
-        S_value = 35,                            // value
-        S_delete_command = 36                    // delete_command
+        S_select_command = 30,                   // select_command
+        S_where_clause = 31,                     // where_clause
+        S_insert_command = 32,                   // insert_command
+        S_value_list = 33,                       // value_list
+        S_value = 34,                            // value
+        S_delete_command = 35                    // delete_command
       };
     };
 
@@ -785,7 +784,7 @@ namespace sql_parser {
     enum
     {
       yylast_ = 47,     ///< Last index in yytable_.
-      yynnts_ = 11,  ///< Number of nonterminal symbols.
+      yynnts_ = 10,  ///< Number of nonterminal symbols.
       yyfinal_ = 2 ///< Termination state number.
     };
 
@@ -796,19 +795,19 @@ namespace sql_parser {
   };
 
 
-#line 13 "sql_parser.y"
+#line 22 "sql_parser.y"
 } // sql_parser
-#line 802 "Parser.hpp"
+#line 801 "Parser.hpp"
 
 
 // "%code provides" blocks.
-#line 18 "sql_parser.y"
+#line 27 "sql_parser.y"
 
     #define YY_DECL \
         int yylex(sql_parser::Parser::semantic_type *yylval, yyscan_t yyscanner)
     YY_DECL;
 
-#line 812 "Parser.hpp"
+#line 811 "Parser.hpp"
 
 
 #endif // !YY_YY_PARSER_HPP_INCLUDED

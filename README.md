@@ -2,9 +2,9 @@
 # Efficient Data Structures for File Organization
 
 ## INTEGRANTES:
-- Anderson Carcamo 
+- Anderson Carcamo
 - Sebastian Chu [@ChuSebastian](https://github.com/ChuSebastian)
-- Cristopher Meneses 
+- Cristopher Meneses
 
 
 ## 1. OBJETIVO
@@ -86,3 +86,158 @@ Esta base de datos contiene información detallada sobre varias especies de Pok�
    - legendary: FALSE
 
 
+## 3. IMPLEMENTACIÓN DE ESTRUCTURAS
+
+### 3.1 EXTENDIBLE HASHING
+
+Para el extendible hashing se han implementando los metodos:
+
+1. **Search(key)**
+
+   El método `search` en la clase `directory_EH` facilita la búsqueda de registros mediante una estructura de hashing extendido. Su funcianamiento se divide en:
+
+   1. **Obtención del Índice de Bucket**:
+      - Utiliza `getBucketIndex(key)` para calcular el índice del bucket según la clave `key`.
+
+   2. **Búsqueda en el Directorio**:
+      - Busca en el `directory` utilizando el índice obtenido para encontrar el `Bucket_EH` correspondiente.
+
+   3. **Búsqueda en el Bucket**:
+      - Si encuentra el `Bucket_EH`, invoca `search(key)` para obtener los registros que coinciden con `key`.
+
+   4. **Retorno de Resultados**:
+      - Retorna los registros encontrados o un vector vacío si no hay coincidencias.
+
+   #### Pseudocódigo:
+
+   ```pseudo
+   Método search(key):
+       bucketIndex = getBucketIndex(key)
+       bucket = directory[bucketIndex]
+       
+       si bucket existe entonces:
+           registros = bucket.search(key)
+           devolver registros
+       sino:
+           devolver vector vacío
+   ```
+2. **bool add(Registro registro)**
+
+   El metodo add añade un registro al bucket. Su funcionamiento se divide en:
+
+   1. **Obtención del Índice de Bucket**:
+      - Utiliza `getBucketIndex(registro.key)` para calcular el índice del bucket donde se añadirá el nuevo registro.
+
+   2. **Obtención del Bucket**:
+      - Accede al `Bucket_EH` correspondiente en el `directory` usando el índice calculado.
+
+   3. **Verificación de Capacidad del Bucket**:
+      - Verifica si el `Bucket_EH` no está lleno llamando a `isFull()`.
+
+   4. **Manejo de Caso Lleno**:
+      - Si el bucket está lleno, invoca `splitBucket(bucketIndex)` para dividir el bucket y luego intenta agregar el registro nuevamente de forma recursiva.
+
+   5. **Añadir Registro**:
+      - Si el bucket tiene capacidad, añade el registro usando `add(registro)` del `Bucket_EH`.
+
+   6. **Retorno de Éxito o Fracaso**:
+      - Retorna `true` si el registro se añadió correctamente, `false` si no se pudo añadir debido a limitaciones de capacidad.
+
+   #### Pseudocódigo:
+
+   ```pseudo
+   Método add(registro):
+       bucketIndex = getBucketIndex(registro.key)
+       bucket = directory[bucketIndex]
+       
+       si bucket no está lleno entonces:
+           si bucket.add(registro) es true entonces:
+               devolver true
+           sino:
+               devolver false
+       
+       sino:
+           splitBucket(bucketIndex)
+           devolver add(registro)
+   ```
+3. **rangeSearch(T begin-key, T end-key)**
+
+   Al estar implementando con un hash, el range search no es optimo para su implementación, además que no hay un orden
+
+4. **remove(T key)**
+
+   Elimina del bucket el registros con llave key. Su funcionameinto se divide en:
+   1. **Obtención del Índice de Bucket**:
+      - Utiliza `getBucketIndex(key)` para calcular el índice del bucket donde se encuentra el registro a eliminar.
+
+   2. **Búsqueda del Bucket**:
+      - Busca el bucket correspondiente en el `directory` usando el índice calculado.
+
+   3. **Eliminación del Registro**:
+      - Si el bucket es encontrado, invoca `remove(key)` del `Bucket_EH` para eliminar el registro identificado por la clave.
+
+   4. **Retorno de Resultado**:
+      - Retorna `true` si se eliminó el registro correctamente, `false` si el bucket no se encontró o si no se pudo realizar la eliminación.
+
+   #### Pseudocódigo:
+
+   ```pseudo
+   Método remove(key):
+       bucketIndex = getBucketIndex(key)
+       bucket = directory[bucketIndex]
+       
+       si bucket es encontrado entonces:
+           devolver bucket.remove(key)
+       
+       sino:
+           devolver false
+   ```        
+
+### 3.2 ISAM
+
+### 3.2 AVL
+
+## 4. Parser
+
+El parser se ha realizado con flex y bison. Esto requiere solo un análisis de los token requeridos para las consultas sql.
+Los archivos sql_parser.l genera el Scanner.cpp y Scanner.hpp. En este lado se implementa los tokens y los tipos de datos usados
+.
+
+
+| TOKENS                      | RESPUESTA                                                              |
+|-----------------------------|-------------------------------------------------------------------------|
+| "create"                    | return Parser::token::CREATE;                                           |
+| "table"                     | return Parser::token::TABLE;                                            |
+| "from"                      | return Parser::token::FROM;                                             |
+| "file"                      | return Parser::token::FILE;                                             |
+| "using"                     | return Parser::token::USING;                                            |
+| "index"                     | return Parser::token::INDEX;                                            |
+| "select"                    | return Parser::token::SELECT;                                           |
+| "where"                     | return Parser::token::WHERE;                                            |
+| "between"                   | return Parser::token::BETWEEN;                                          |
+| "insert"                    | return Parser::token::INSERT;                                           |
+| "into"                      | return Parser::token::INTO;                                             |
+| "values"                    | return Parser::token::VALUES;                                           |
+| "delete"                    | return Parser::token::DELETE;                                           |
+| "*"                         | return Parser::token::MULT;                                             |
+| "("                         | return Parser::token::LPAREN;                                           |
+| ")"                         | return Parser::token::RPAREN;                                           |
+| "="                         | return Parser::token::EQ;                                               |
+| ","                         | return Parser::token::COMMA;                                            |
+| \[A-Za-z_\]\[A-Za-z_0-9\]\* | return Parser::token::IDENTIFIER;                                |
+
+Ahora la grámatica independiente del contexto implementada sería:
+
+
+Con esta gramtica debería poder aceptar un create a partir de un archivo.csv, insert, remove y un search:
+Los parametros son:
+
+- **command_list:** Lista de comandos.
+- **command:** Comandos específicos como create_table_command, select_command, insert_command, delete_command.
+- **create_table_command:** Comando para crear tablas especificando origen de datos y uso de índice.
+- **select_command:** Comando para seleccionar datos con posibilidad de filtrado.
+- **where_clause:** Cláusula opcional para especificar condiciones de filtro en SELECT y DELETE.
+- **insert_command:** Comando para insertar datos en una tabla especificada.
+- **value_list:** Lista de valores para inserción.
+- **value:** Valores literales (cadenas o enteros).
+- **delete_command:** Comando para eliminar datos basado en condiciones.

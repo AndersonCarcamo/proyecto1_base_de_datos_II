@@ -42,8 +42,17 @@
 #include <iostream>
 #include <string>
 #include "Scanner.hpp"
+#include "../extendiblehashing/Bucket_EH.hh"
+#include "../extendiblehashing/ExtendibleHashing.hh"
 
-#line 47 "Parser1.cpp"
+
+using namespace std;
+using namespace sql_parser;
+
+directory_EH<string> hashTable(5, 5); // inicilizaremos con un deph global de 3 y size de bucket 4
+void loadCSVToHashTable(const std::string& filename, const std::string& key);
+
+#line 56 "Parser1.cpp"
 
 
 #include "Parser.hpp"
@@ -120,9 +129,9 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 13 "sql_parser.y"
+#line 22 "sql_parser.y"
 namespace sql_parser {
-#line 126 "Parser1.cpp"
+#line 135 "Parser1.cpp"
 
   /// Build a parser object.
   Parser::Parser (yyscan_t scanner_yyarg)
@@ -576,64 +585,65 @@ namespace sql_parser {
         {
           switch (yyn)
             {
-  case 8: // create_table_command: CREATE TABLE IDENTIFIER FROM FILE STRING_LITERAL USING INDEX index_type LPAREN IDENTIFIER RPAREN EOL
-#line 43 "sql_parser.y"
+  case 8: // create_table_command: CREATE TABLE IDENTIFIER FROM FILE STRING_LITERAL USING INDEX LPAREN IDENTIFIER RPAREN EOL
+#line 52 "sql_parser.y"
     {
-        std::cout << "Create table command: " << yystack_[10].value << " from file " << yystack_[7].value << " using index " << yystack_[4].value << "(" << yystack_[2].value << ")" << std::endl;
+        std::cout << "Create table command: " << yystack_[9].value << " from file " << yystack_[6].value << " using index on " << yystack_[2].value << std::endl;
+        loadCSVToHashTable(yystack_[6].value, yystack_[2].value);
     }
-#line 585 "Parser1.cpp"
+#line 595 "Parser1.cpp"
     break;
 
-  case 10: // select_command: SELECT '*' FROM IDENTIFIER where_clause EOL
-#line 54 "sql_parser.y"
+  case 9: // select_command: SELECT '*' FROM IDENTIFIER where_clause EOL
+#line 60 "sql_parser.y"
     {
         std::cout << "Select command from " << yystack_[2].value << " where " << yystack_[1].value << std::endl;
     }
-#line 593 "Parser1.cpp"
+#line 603 "Parser1.cpp"
     break;
 
-  case 11: // where_clause: WHERE IDENTIFIER EQ value
-#line 61 "sql_parser.y"
+  case 10: // where_clause: WHERE IDENTIFIER EQ value
+#line 67 "sql_parser.y"
     {
         yylhs.value = yystack_[2].value + " = " + yystack_[0].value;
     }
-#line 601 "Parser1.cpp"
+#line 611 "Parser1.cpp"
     break;
 
-  case 12: // where_clause: WHERE IDENTIFIER BETWEEN value AND value
-#line 65 "sql_parser.y"
+  case 11: // where_clause: WHERE IDENTIFIER BETWEEN value AND value
+#line 71 "sql_parser.y"
     {
         yylhs.value = yystack_[4].value + " between " + yystack_[2].value + " and " + yystack_[0].value;
     }
-#line 609 "Parser1.cpp"
+#line 619 "Parser1.cpp"
     break;
 
-  case 13: // where_clause: %empty
-#line 69 "sql_parser.y"
+  case 12: // where_clause: %empty
+#line 75 "sql_parser.y"
     {
         yylhs.value = "true";
     }
-#line 617 "Parser1.cpp"
+#line 627 "Parser1.cpp"
     break;
 
-  case 14: // insert_command: INSERT INTO IDENTIFIER VALUES LPAREN value_list RPAREN EOL
-#line 76 "sql_parser.y"
+  case 13: // insert_command: INSERT INTO IDENTIFIER VALUES LPAREN value_list RPAREN EOL
+#line 82 "sql_parser.y"
     {
         std::cout << "Insert command into " << yystack_[5].value << " values (" << yystack_[2].value << ")" << std::endl;
     }
-#line 625 "Parser1.cpp"
+#line 635 "Parser1.cpp"
     break;
 
-  case 19: // delete_command: DELETE FROM IDENTIFIER WHERE IDENTIFIER EQ value EOL
-#line 93 "sql_parser.y"
+  case 18: // delete_command: DELETE FROM IDENTIFIER WHERE IDENTIFIER EQ value EOL
+#line 99 "sql_parser.y"
     {
         std::cout << "Delete command from " << yystack_[5].value << " where " << yystack_[3].value << " = " << yystack_[1].value << std::endl;
     }
-#line 633 "Parser1.cpp"
+#line 643 "Parser1.cpp"
     break;
 
 
-#line 637 "Parser1.cpp"
+#line 647 "Parser1.cpp"
 
             default:
               break;
@@ -829,12 +839,12 @@ namespace sql_parser {
   const signed char
   Parser::yypact_[] =
   {
-     -34,     0,   -34,    -3,   -14,     5,     8,   -34,   -34,   -34,
-     -34,   -34,     3,    15,     6,     7,    16,     9,    10,    17,
-      20,    18,    11,    13,    19,    14,    30,   -10,    12,    26,
-     -11,   -34,   -34,   -34,    -5,   -34,   -10,    27,   -10,   -10,
-     -10,    35,    36,    23,    21,   -34,   -34,   -34,   -34,   -34,
-      22,   -10,    24,   -34,    25,    39,   -34
+     -34,     0,   -34,    -3,   -14,     1,     8,   -34,   -34,   -34,
+     -34,   -34,     2,    15,     5,     6,    18,     9,    10,    16,
+      21,    19,    11,    12,    13,    17,    30,   -10,    14,    27,
+     -11,   -34,   -34,   -34,    -2,   -34,   -10,    29,   -10,   -10,
+     -10,    33,    36,    20,    22,   -34,   -34,   -34,   -34,    23,
+     -10,    25,   -34,    39,   -34
   };
 
   const signed char
@@ -842,69 +852,67 @@ namespace sql_parser {
   {
        2,     0,     1,     0,     0,     0,     0,     3,     4,     5,
        6,     7,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,    13,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,    10,    17,    18,     0,    15,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,    11,    16,    14,    19,     9,
-       0,     0,     0,    12,     0,     0,     8
+       0,    12,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     9,    16,    17,     0,    14,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,    10,    15,    13,    18,     0,
+       0,     0,    11,     0,     8
   };
 
   const signed char
   Parser::yypgoto_[] =
   {
-     -34,   -34,   -34,   -34,   -34,   -34,   -34,   -34,   -34,   -33,
-     -34
+     -34,   -34,   -34,   -34,   -34,   -34,   -34,   -34,   -33,   -34
   };
 
   const signed char
   Parser::yydefgoto_[] =
   {
-       0,     1,     7,     8,    50,     9,    26,    10,    34,    35,
-      11
+       0,     1,     7,     8,     9,    26,    10,    34,    35,    11
   };
 
   const signed char
   Parser::yytable_[] =
   {
        2,    38,    12,    42,     3,    44,    45,    46,    32,    33,
-       4,    13,    39,     5,    15,    40,     6,    41,    53,    14,
-      16,    17,    20,    18,    19,    22,    21,    24,    23,    25,
-      28,    30,    27,    31,    37,    36,    43,    29,    47,    48,
-      49,    54,    56,    52,     0,    51,     0,    55
+       4,    13,    39,     5,    15,    14,     6,    52,    40,    16,
+      41,    17,    18,    19,    20,    22,    21,    23,    24,    28,
+      25,    29,    27,    31,    30,    37,    47,    36,    43,    48,
+      51,    49,    54,     0,     0,     0,    50,    53
   };
 
   const signed char
   Parser::yycheck_[] =
   {
        0,    12,     5,    36,     4,    38,    39,    40,    18,    19,
-      10,    25,    23,    13,     6,    20,    16,    22,    51,    14,
-      17,     6,     6,    17,    17,    15,    17,     7,    11,    11,
-      17,    17,    21,     3,     8,    23,     9,    18,     3,     3,
-      17,    17,     3,    21,    -1,    24,    -1,    22
+      10,    25,    23,    13,     6,    14,    16,    50,    20,    17,
+      22,     6,    17,    17,     6,    15,    17,    11,     7,    17,
+      11,    18,    21,     3,    17,     8,     3,    23,     9,     3,
+      17,    21,     3,    -1,    -1,    -1,    24,    22
   };
 
   const signed char
   Parser::yystos_[] =
   {
-       0,    27,     0,     4,    10,    13,    16,    28,    29,    31,
-      33,    36,     5,    25,    14,     6,    17,     6,    17,    17,
-       6,    17,    15,    11,     7,    11,    32,    21,    17,    18,
-      17,     3,    18,    19,    34,    35,    23,     8,    12,    23,
-      20,    22,    35,     9,    35,    35,    35,     3,     3,    17,
-      30,    24,    21,    35,    17,    22,     3
+       0,    27,     0,     4,    10,    13,    16,    28,    29,    30,
+      32,    35,     5,    25,    14,     6,    17,     6,    17,    17,
+       6,    17,    15,    11,     7,    11,    31,    21,    17,    18,
+      17,     3,    18,    19,    33,    34,    23,     8,    12,    23,
+      20,    22,    34,     9,    34,    34,    34,     3,     3,    21,
+      24,    17,    34,    22,     3
   };
 
   const signed char
   Parser::yyr1_[] =
   {
        0,    26,    27,    27,    28,    28,    28,    28,    29,    30,
-      31,    32,    32,    32,    33,    34,    34,    35,    35,    36
+      31,    31,    31,    32,    33,    33,    34,    34,    35
   };
 
   const signed char
   Parser::yyr2_[] =
   {
-       0,     2,     0,     2,     1,     1,     1,     1,    13,     1,
-       6,     4,     6,     0,     8,     1,     3,     1,     1,     8
+       0,     2,     0,     2,     1,     1,     1,     1,    12,     6,
+       4,     6,     0,     8,     1,     3,     1,     1,     8
   };
 
 
@@ -919,8 +927,8 @@ namespace sql_parser {
   "INSERT", "INTO", "VALUES", "DELETE", "IDENTIFIER", "STRING_LITERAL",
   "INTEGER_LITERAL", "COMMA", "LPAREN", "RPAREN", "EQ", "AND", "'*'",
   "$accept", "command_list", "command", "create_table_command",
-  "index_type", "select_command", "where_clause", "insert_command",
-  "value_list", "value", "delete_command", YY_NULLPTR
+  "select_command", "where_clause", "insert_command", "value_list",
+  "value", "delete_command", YY_NULLPTR
   };
 #endif
 
@@ -929,8 +937,8 @@ namespace sql_parser {
   const signed char
   Parser::yyrline_[] =
   {
-       0,    30,    30,    31,    35,    36,    37,    38,    42,    49,
-      53,    60,    64,    69,    75,    82,    83,    87,    88,    92
+       0,    39,    39,    40,    44,    45,    46,    47,    51,    59,
+      66,    70,    75,    81,    88,    89,    93,    94,    98
   };
 
   void
@@ -1009,13 +1017,58 @@ namespace sql_parser {
       return symbol_kind::S_YYUNDEF;
   }
 
-#line 13 "sql_parser.y"
+#line 22 "sql_parser.y"
 } // sql_parser
-#line 1015 "Parser1.cpp"
+#line 1023 "Parser1.cpp"
 
-#line 98 "sql_parser.y"
+#line 104 "sql_parser.y"
 
 
 void sql_parser::Parser::error(const std::string& msg) {
     std::cerr << "Error: " << msg << '\n';
+}
+
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <iostream>
+#include "../extendiblehashing/registro.h"
+#include "../extendiblehashing/Bucket_EH.hh"
+#include "../extendiblehashing/ExtendibleHashing.hh"
+
+directory_EH<int> hashTable(5, 5); // Ajustado para usar int como clave
+
+void loadCSVToHashTable(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    std::vector<std::string> columns;
+    bool firstLine = true;
+
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string token;
+        std::vector<std::string> values;
+
+        while (std::getline(ss, token, ',')) {
+            values.push_back(token);
+        }
+
+        if (firstLine) {
+            columns = values;
+            firstLine = false;
+        } else {
+            Registro record(0, "", "", "", "", 0, 0, "", "", "", "", "", "", "");
+            for (size_t i = 0; i < values.size(); ++i) {
+                record.setField(columns[i], values[i]);
+            }
+            hashTable.add(record.getKey(), record);
+        }
+    }
+
+    file.close();
 }

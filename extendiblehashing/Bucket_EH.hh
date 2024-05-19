@@ -72,7 +72,7 @@ bool Bucket_EH<T>::add(const Registro& record) {
 template <typename T>
 bool Bucket_EH<T>::remove(const T& key) {
     auto it = std::remove_if(records.begin(), records.end(), [&key](const Registro& record) {
-        return record.key == key;
+        return record.getKey() == key;
     });
     if (it != records.end()) {
         records.erase(it, records.end());
@@ -85,7 +85,7 @@ template <typename T>
 std::vector<Registro> Bucket_EH<T>::search(const T& key) const {
     std::vector<Registro> result;
     for (const auto& record : records) {
-        if (record.key == key) {
+        if (record.getKey() == key) {
             result.push_back(record);
         }
     }
@@ -122,37 +122,125 @@ void Bucket_EH<T>::redistribute(std::unordered_map<std::string, Bucket_EH<T>*>& 
     std::vector<Registro> oldRecords = records;
     clear();
     for (const auto& record : oldRecords) {
-        std::string newBucketIndex = std::bitset<sizeof(std::size_t) * 8>(std::hash<T>{}(record.key)).to_string();
+        std::string newBucketIndex = std::bitset<sizeof(std::size_t) * 8>(std::hash<T>{}(record.getKey())).to_string();
         newBucketIndex = newBucketIndex.substr(newBucketIndex.size() - localDepth);
         directory[newBucketIndex]->add(record);
     }
 }
 
 template <typename T>
-void Bucket_EH<T>::save(std::ofstream& outFile) const {
+void Bucket_EH<T>::save(ofstream& outFile) const {
     outFile.write(reinterpret_cast<const char*>(&localDepth), sizeof(localDepth));
     int recordCount = records.size();
     outFile.write(reinterpret_cast<const char*>(&recordCount), sizeof(recordCount));
     for (const auto& record : records) {
-        outFile.write(reinterpret_cast<const char*>(&record.key), sizeof(record.key));
-        size_t dataSize = record.data.size();
-        outFile.write(reinterpret_cast<const char*>(&dataSize), sizeof(dataSize));
-        outFile.write(record.data.c_str(), dataSize);
+        outFile.write(reinterpret_cast<const char*>(&record.ID), sizeof(record.ID));
+
+        size_t size = record.Time_GMT.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Time_GMT.c_str(), size);
+
+        size = record.Phone.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Phone.c_str(), size);
+
+        size = record.Organization.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Organization.c_str(), size);
+
+        size = record.OLF.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.OLF.c_str(), size);
+
+        outFile.write(reinterpret_cast<const char*>(&record.Rating), sizeof(record.Rating));
+        outFile.write(reinterpret_cast<const char*>(&record.NumberReview), sizeof(record.NumberReview));
+
+        size = record.Category.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Category.c_str(), size);
+
+        size = record.Country.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Country.c_str(), size);
+
+        size = record.CountryCode.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.CountryCode.c_str(), size);
+
+        size = record.State.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.State.c_str(), size);
+
+        size = record.City.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.City.c_str(), size);
+
+        size = record.Street.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Street.c_str(), size);
+
+        size = record.Building.size();
+        outFile.write(reinterpret_cast<const char*>(&size), sizeof(size));
+        outFile.write(record.Building.c_str(), size);
     }
 }
 
 template <typename T>
-void Bucket_EH<T>::load(std::ifstream& inFile) {
+void Bucket_EH<T>::load(ifstream& inFile) {
     inFile.read(reinterpret_cast<char*>(&localDepth), sizeof(localDepth));
     int recordCount;
     inFile.read(reinterpret_cast<char*>(&recordCount), sizeof(recordCount));
     records.resize(recordCount);
     for (auto& record : records) {
-        inFile.read(reinterpret_cast<char*>(&record.key), sizeof(record.key));
-        size_t dataSize;
-        inFile.read(reinterpret_cast<char*>(&dataSize), sizeof(dataSize));
-        record.data.resize(dataSize);
-        inFile.read(&record.data[0], size);
+        inFile.read(reinterpret_cast<char*>(&record.ID), sizeof(record.ID));
+
+        size_t size;
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Time_GMT.resize(size);
+        inFile.read(&record.Time_GMT[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Phone.resize(size);
+        inFile.read(&record.Phone[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Organization.resize(size);
+        inFile.read(&record.Organization[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.OLF.resize(size);
+        inFile.read(&record.OLF[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&record.Rating), sizeof(record.Rating));
+        inFile.read(reinterpret_cast<char*>(&record.NumberReview), sizeof(record.NumberReview));
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Category.resize(size);
+        inFile.read(&record.Category[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Country.resize(size);
+        inFile.read(&record.Country[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.CountryCode.resize(size);
+        inFile.read(&record.CountryCode[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.State.resize(size);
+        inFile.read(&record.State[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.City.resize(size);
+        inFile.read(&record.City[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Street.resize(size);
+        inFile.read(&record.Street[0], size);
+
+        inFile.read(reinterpret_cast<char*>(&size), sizeof(size));
+        record.Building.resize(size);
+        inFile.read(&record.Building[0], size);
     }
 }
 
