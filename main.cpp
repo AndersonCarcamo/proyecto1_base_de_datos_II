@@ -1,45 +1,63 @@
 #include <iostream>
 
-#include "./extendiblehashing/ExtendibleHashing.hh"
 
-int main(){
-    directory_EH<int> dir(2, 2);
+#include "ISAM.h"
+using namespace std;
 
-    // Insertar algunos registros
-    dir.add(Registro(1, "data1"));
-    dir.add(Registro(2, "data2"));
-    dir.add(Registro(3, "data3"));
-    dir.add(Registro(4, "data4"));
+void test_build() {
+    ISAM isam;
+    isam.build();
+}
 
-    // Buscar registros
-    vector<Registro> result = dir.search(2);
-    for (const auto& reg : result) {
-        cout << "Found: key=" << reg.key << ", data=" << reg.data << endl;
+void search_test() {
+    ISAM isam;
+
+    // rango de busqueda: 1 <= n <= 1072
+    cout << "Search 5 -----" << "\n";
+    isam.search(5).print_values();
+    cout << "\n";
+
+    cout << "Search 99 -----:" << "\n";
+    isam.search(99).print_values();
+    cout << "\n";
+
+    cout << "Search 800 -----:" << "\n";
+    isam.search(800).print_values();
+    cout << "\n";
+
+    cout << "Search 700 -----:" << "\n";
+    isam.search(700).print_values();
+}
+
+void range_search_test() {
+    ISAM isam;
+
+    vector<Pokemon> p1 = isam.range_search(2, 4);
+    vector<Pokemon> p2 = isam.range_search(50, 55);
+    vector<Pokemon> p3 = isam.range_search(10, 15);
+
+    for (auto& p : p1) {
+        p.print_values();
+        cout << "\n";
     }
 
-    // Verificar si se realiza la división de buckets correctamente
-    dir.add(Registro(5, "data5"));
-    dir.add(Registro(6, "data6"));
-
-    // Buscar registros nuevamente
-    result = dir.search(5);
-    for (const auto& reg : result) {
-        cout << "Found: key=" << reg.key << ", data=" << reg.data << endl;
+    for (auto& p : p2) {
+        p.print_values();
+        cout << "\n";
     }
 
-//    // Eliminar un registro y verificar
-//    if (dir.remove(2)) {
-//        cout << "Registro con clave 2 eliminado correctamente." << endl;
-//    }
-//
-//    result = dir.search(2);
-//    if (result.empty()) {
-//        cout << "No se encontró el registro con clave 2 (esperado)." << endl;
-//    } else {
-//        for (const auto& reg : result) {
-//            cout << "Found: key=" << reg.key << ", data=" << reg.data << endl;
-//        }
-//    }
+    for (auto& p : p3) {
+        p.print_values();
+        cout << "\n";
+    }
 
+    cout << endl;
+}
+
+int main() {
+    // eliminar los arhivos en la carpeta de files antes de descomentar la construccion del ISAM
+    test_build(); 
+    search_test();
+    range_search_test();
     return 0;
 }
