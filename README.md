@@ -201,7 +201,7 @@ Para el extendible hashing se han implementando los metodos:
 ### 3.2 AVL
 #AVL Tree File Handling for Pokémon Records
 
-![Pokémon Records](arbolavl.jpg)
+![Pokémon Records](arbolavl.png)
 
 Este proyecto implementa un árbol AVL para manejar registros de Pokémon almacenados en un archivo binario. Los registros son leídos de un archivo CSV y se almacenan en un archivo binario, manteniendo un árbol AVL para permitir búsquedas eficientes, inserciones y eliminaciones.
 
