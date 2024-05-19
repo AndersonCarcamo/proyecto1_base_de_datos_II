@@ -35,6 +35,9 @@ class ISAM {
 
         vector<Pokemon> pokemon = read_csv_to_pokemon();  // O(n)
 
+        // Contador para saber la posicion de indice del segundo nivel
+        int contador_pos = 0;
+
         // Hay 1072 registros de pokemon en total y queremos crear indices proporcionales
         // Fue una coincidencia que la cantidad de registros fuera multiplo de 16 xd.
 
@@ -42,8 +45,6 @@ class ISAM {
 
         // Construir los archivos
         for (Pokemon p : pokemon) {
-            int contador_pos = 0;
-
             datafile.write(reinterpret_cast<char *>(&p), sizeof(Pokemon));
 
             // Queremos guardar la serie 1, 5, 9, 13, 17, ..., 4n + 1.
@@ -64,7 +65,7 @@ class ISAM {
                 if (p.get_key() % 16 == 1) {
                     PokemonIndex1 p1(p.get_key(), pos, contador_pos);
                     firstindex.write(reinterpret_cast<char *>(&p1), sizeof(PokemonIndex1));
-                    contador_pos++;
+                    contador_pos = contador_pos + 4;
                 }
             }
         }
@@ -120,12 +121,12 @@ class ISAM {
         if (!file)
             throw runtime_error("Error al leer datos");
         file.seekg(second_level.get_pos(), ios::beg);
-       
+
         Pokemon p;
 
         for (int i = 0; i < 4; ++i) {  // solo puede estar dentro de estos 4 por como se definio el indice 2
             file.read(reinterpret_cast<char *>(&p), sizeof(Pokemon));
-            
+
             if (p.get_key() == key)
                 return p;
         }
