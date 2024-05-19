@@ -22,6 +22,10 @@ void search_test() {
 
     cout << "Search 800 -----:" << "\n";
     isam.search(800).print_values();
+    cout << "\n";
+
+    cout << "Search 700 -----:" << "\n";
+    isam.search(700).print_values();
 }
 
 void range_search_test() {
